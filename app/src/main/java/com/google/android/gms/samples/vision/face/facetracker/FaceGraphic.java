@@ -33,7 +33,7 @@ import java.util.List;
  * graphic overlay view.
  */
 class FaceGraphic extends GraphicOverlay.Graphic {
-    private static final float FACE_POSITION_RADIUS = 10.0f;
+    //private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private static final float HEAD_SIZE_FACTOR = 2.0f;
@@ -121,7 +121,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float degree = 0;
         for (int i=0; i< landmarkList.size(); i++) {
             Landmark landmark = landmarkList.get(i);
-            canvas.drawCircle(translateX(landmark.getPosition().x), translateY(landmark.getPosition().y), FACE_POSITION_RADIUS, mFacePositionPaint);
+            //canvas.drawCircle(translateX(landmark.getPosition().x), translateY(landmark.getPosition().y), FACE_POSITION_RADIUS, mFacePositionPaint);
             switch (landmark.getType()) {
                 case Landmark.LEFT_EYE:
                     break;

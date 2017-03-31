@@ -123,6 +123,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         FaceDetector detector = new FaceDetector.Builder(context)
+                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
