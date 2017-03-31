@@ -32,12 +32,12 @@ import android.view.View;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
+import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
 import java.io.IOException;
 
@@ -127,7 +127,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .build();
 
         detector.setProcessor(
-                new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
+                new LargestFaceFocusingProcessor.Builder(detector, new GraphicFaceTracker(mGraphicOverlay))
                         .build());
 
         if (!detector.isOperational()) {
@@ -145,7 +145,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
                 .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(30.0f)
+                .setRequestedFps(15.0f)
                 .build();
     }
 
@@ -261,17 +261,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     //==============================================================================================
     // Graphic Face Tracker
     //==============================================================================================
-
-    /**
-     * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
-     * uses this factory to create face trackers as needed -- one for each individual.
-     */
-    private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
-        @Override
-        public Tracker<Face> create(Face face) {
-            return new GraphicFaceTracker(mGraphicOverlay);
-        }
-    }
 
     /**
      * Face tracker for each detected individual. This maintains a face graphic within the app's

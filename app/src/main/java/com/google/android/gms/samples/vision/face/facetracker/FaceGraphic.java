@@ -21,15 +21,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 
 import java.util.List;
-
-import static com.google.android.gms.internal.zzs.TAG;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
@@ -38,12 +35,15 @@ import static com.google.android.gms.internal.zzs.TAG;
 class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
-    private static final float ID_Y_OFFSET = 50.0f;
-    private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
-    private static final float SIZE_FACTOR = 2.3f;
-    private static final float THRESHOLD_OPEN = 0.7f;
-    private static final float THRESHOLD_HALF_OPEN = 0.3f;
+    private static final float HEAD_SIZE_FACTOR = 2.0f;
+    private static final float THRESHOLD_EYES_OPEN = 0.7f;
+    private static final float THRESHOLD_EYES_HALF_OPEN = 0.3f;
+    private static final float THRESHOLD_MOUTH_OPEN = 0.6f;
+    private static final float THRESHOLD_MOUTH_HALF_OPEN = 0.2f;
+    private static final float DIFF_ROTATE_DEGREE = 3f;
+
+    private float mLastDegree = 0f;
 
     private static final int COLOR_CHOICES[] = {
         Color.BLUE,
@@ -62,7 +62,6 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
     private int mFaceId;
-    private float mFaceHappiness;
 
     private Context mContext;
     private boolean mRotateEnabled = true;
@@ -153,23 +152,23 @@ class FaceGraphic extends GraphicOverlay.Graphic {
                     degree = -90;
                 }
             }
-
-            Log.d(TAG, "degree: " + degree);
-            if (degree != 0) {
-                canvas.save();
-                canvas.rotate(degree, x, y);
+            if (Math.abs(degree - mLastDegree) > DIFF_ROTATE_DEGREE) {
+                mLastDegree = degree;
             }
+        } else {
+            //Log.d(TAG, "nose or mouth missing");
         }
 
+        if (mLastDegree != 0) {
+            canvas.save();
+            canvas.rotate(mLastDegree, x, y);
+        }
 //        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
 //        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-//        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-//        canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-//        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
         // Draws a bounding box around the face.
-        float xOffset = scaleX(face.getWidth() / 2.0f) * SIZE_FACTOR;
-        float yOffset = scaleY(face.getHeight() / 2.0f) * SIZE_FACTOR;
+        float xOffset = scaleX(face.getWidth() / 2.0f) * HEAD_SIZE_FACTOR;
+        float yOffset = scaleY(face.getHeight() / 2.0f) * HEAD_SIZE_FACTOR;
         float left = x - xOffset;
         float top = y - yOffset;
         float right = x + xOffset;
@@ -179,13 +178,14 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         // Draw from resource
         Drawable head = mContext.getResources().getDrawable(R.drawable.female_003_head_hd, null);
         head.setBounds((int)left, (int)top, (int)right, (int)bottom);
-        //head.draw(canvas);
-        if (face.getIsLeftEyeOpenProbability() > THRESHOLD_OPEN || face.getIsRightEyeOpenProbability() > THRESHOLD_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye01_hd, null);
+        head.draw(canvas);
+
+        if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN || face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
+            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye02_hd, null);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
-        } else if (face.getIsLeftEyeOpenProbability() < THRESHOLD_HALF_OPEN || face.getIsRightEyeOpenProbability() < THRESHOLD_HALF_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye02_hd, null);
+        } else if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
+            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye01_hd, null);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         } else {
@@ -194,11 +194,11 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             eyes.draw(canvas);
         }
 
-        if (face.getIsSmilingProbability() > THRESHOLD_OPEN) {
+        if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_OPEN) {
             Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile03_hd, null);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
-        } else if (face.getIsSmilingProbability() > THRESHOLD_HALF_OPEN) {
+        } else if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_HALF_OPEN) {
             Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile02_hd, null);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
@@ -208,7 +208,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             mouth.draw(canvas);
         }
 
-        if (degree != 0) {
+        if (mLastDegree != 0) {
             canvas.restore();
         }
     }
