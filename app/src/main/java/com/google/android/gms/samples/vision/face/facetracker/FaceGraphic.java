@@ -176,34 +176,34 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
 
         // Draw from resource
-        Drawable head = mContext.getResources().getDrawable(R.drawable.female_003_head_hd, null);
+        Drawable head = mContext.getResources().getDrawable(R.drawable.female_003_head, null);
         head.setBounds((int)left, (int)top, (int)right, (int)bottom);
         head.draw(canvas);
 
         if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN || face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye02_hd, null);
+            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye02, null);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         } else if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye01_hd, null);
+            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye01, null);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         } else {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye03_hd, null);
+            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye03, null);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         }
 
         if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_OPEN) {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile03_hd, null);
+            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile03, null);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         } else if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_HALF_OPEN) {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile02_hd, null);
+            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile02, null);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         } else {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile01_hd, null);
+            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile01, null);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         }
