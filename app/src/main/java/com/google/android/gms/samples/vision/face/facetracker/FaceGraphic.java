@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
@@ -176,34 +177,48 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
 
         // Draw from resource
-        Drawable head = mContext.getResources().getDrawable(R.drawable.female_003_head, null);
+        Drawable head = ContextCompat.getDrawable(mContext, R.drawable.female_003_head);
         head.setBounds((int)left, (int)top, (int)right, (int)bottom);
         head.draw(canvas);
 
-        if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN || face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye02, null);
+        if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye02);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
-        } else if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye01, null);
+        } else if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye01);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         } else {
-            Drawable eyes = mContext.getResources().getDrawable(R.drawable.female_003_eye03, null);
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye03);
+            eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
+            eyes.draw(canvas);
+        }
+
+        if (face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye02);
+            eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
+            eyes.draw(canvas);
+        } else if (face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye01);
+            eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
+            eyes.draw(canvas);
+        } else {
+            Drawable eyes = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye03);
             eyes.setBounds((int) left, (int) top, (int) right, (int) bottom);
             eyes.draw(canvas);
         }
 
         if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_OPEN) {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile03, null);
+            Drawable mouth = ContextCompat.getDrawable(mContext, R.drawable.female_003_smile03);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         } else if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_HALF_OPEN) {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile02, null);
+            Drawable mouth = ContextCompat.getDrawable(mContext, R.drawable.female_003_smile02);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         } else {
-            Drawable mouth = mContext.getResources().getDrawable(R.drawable.female_003_smile01, null);
+            Drawable mouth = ContextCompat.getDrawable(mContext, R.drawable.female_003_smile01);
             mouth.setBounds((int) left, (int) top, (int) right, (int) bottom);
             mouth.draw(canvas);
         }
