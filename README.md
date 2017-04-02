@@ -10,4 +10,8 @@ Android Play Services SDK level 26 or greater.
 
 * Front camera preview screen
 * Face detection for the most centre and largest face using **LargestFaceFocusingProcessor**
-* Mask drawing based on head tilting, left / right blinking and smiling mouth
+* Mask drawing based on head tilting, left / right eyes blinking and smiling mouth
+
+## Test Device
+
+Motorola Nexus 6 (Android 6.0.1, API 23)
