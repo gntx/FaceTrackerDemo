@@ -37,8 +37,8 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     // Factor that controls the size of overlay
     private static final float HEAD_SIZE_FACTOR = 2.0f;
     // Thresholds to decide whether an eye is open, half open or closed
-    private static final float THRESHOLD_EYES_OPEN = 0.65f;
-    private static final float THRESHOLD_EYES_HALF_OPEN = 0.35f;
+    private static final float THRESHOLD_EYES_OPEN = 0.7f;
+    private static final float THRESHOLD_EYES_HALF_OPEN = 0.4f;
     // Thresholds to decide whether a mouth is open, half open or closed
     private static final float THRESHOLD_MOUTH_OPEN = 0.6f;
     private static final float THRESHOLD_MOUTH_HALF_OPEN = 0.2f;
@@ -145,6 +145,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         Drawable head = ContextCompat.getDrawable(mContext, R.drawable.female_003_head);
         head.setBounds((int)left, (int)top, (int)right, (int)bottom);
         head.draw(canvas);
+
         if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsLeftEyeOpenProbability() == -1.0) {
             Drawable leftEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye01);
             leftEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
@@ -158,6 +159,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             leftEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             leftEye.draw(canvas);
         }
+
         if (face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsRightEyeOpenProbability() == -1.0) {
             Drawable rightEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye01);
             rightEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
@@ -171,6 +173,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             rightEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             rightEye.draw(canvas);
         }
+
 
         if (face.getIsSmilingProbability() > THRESHOLD_MOUTH_OPEN) {
             Drawable mouth = ContextCompat.getDrawable(mContext, R.drawable.female_003_smile03);

@@ -30,7 +30,7 @@ Note 2: The range of head tilting angle is between -45% and 45% according to [Go
 
 Classifications are set to ALL in this demo. The probabilities of eyes opening and smiling are necessary to draw corresponding images on the overlay.
 
-Take the left eye for example. When getIsLeftEyeOpenProbability() is larger than a threshold (0.65 in this demo), a fully open left eye is drawn on the canvas; when it goes smaller than another threshold (0.35), a closed eye is drawn; when the value lies between these two thresholds, a half open eye will be presented.
+Take the left eye for example. When getIsLeftEyeOpenProbability() is larger than a threshold (0.7 in this demo), a fully open left eye is drawn on the canvas; when it goes smaller than another threshold (0.4), a closed eye is drawn; when the value lies between these two thresholds, a half open eye will be presented.
 
 ## Test Device
 
