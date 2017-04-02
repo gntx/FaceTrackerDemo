@@ -19,15 +19,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.Landmark;
-
-import java.util.List;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
@@ -47,7 +43,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float THRESHOLD_MOUTH_OPEN = 0.6f;
     private static final float THRESHOLD_MOUTH_HALF_OPEN = 0.2f;
     // Mininum degree to tile the head
-    private static final float DIFF_ROTATE_DEGREE = 3.0f;
+    private static final float DIFF_ROTATE_DEGREE = 2.0f;
 
     private float mLastDegree = 0f;
 
@@ -120,50 +116,13 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
 
-        // Calculate the angle of head tilting based on NOSE_BASE and BOTTOM_MOUTH
-        List<Landmark> landmarkList = face.getLandmarks();
-        PointF ptNose = null;
-        PointF ptMouth = null;
-        for (int i=0; i< landmarkList.size(); i++) {
-            Landmark landmark = landmarkList.get(i);
-            switch (landmark.getType()) {
-                case Landmark.LEFT_EYE:
-                    break;
-                case Landmark.RIGHT_EYE:
-                    break;
-                case Landmark.LEFT_MOUTH:
-                    break;
-                case Landmark.RIGHT_MOUTH:
-                    break;
-                case Landmark.NOSE_BASE:
-                    ptNose = landmark.getPosition();
-                    break;
-                case Landmark.BOTTOM_MOUTH:
-                    ptMouth = landmark.getPosition();
-                default:
-                    break;
-            }
-        }
-        if (mRotateEnabled && ptNose != null && ptMouth != null) {
-            float degree = 0;
-            float yLength = ptNose.y - ptMouth.y;
-            float xLength = ptNose.x - ptMouth.x;
-            if (yLength != 0) {
-                degree = (float) Math.toDegrees(Math.atan(xLength / yLength));
-            } else {
-                if (xLength > 0) {
-                    degree = 90;
-                } else if (xLength < 0) {
-                    degree = -90;
-                }
-            }
+        if (mRotateEnabled) {
+            float degree = face.getEulerZ();
 
             // Rotate canvas only when diff is larger than a threshold to avoid vibration
             if (Math.abs(degree - mLastDegree) > DIFF_ROTATE_DEGREE) {
                 mLastDegree = degree;
             }
-        } else {
-            //Log.d(TAG, "nose or mouth missing");
         }
 
         if (mLastDegree != 0) {
@@ -186,13 +145,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         Drawable head = ContextCompat.getDrawable(mContext, R.drawable.female_003_head);
         head.setBounds((int)left, (int)top, (int)right, (int)bottom);
         head.draw(canvas);
-
-        if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
-            Drawable leftEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye02);
+        if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsLeftEyeOpenProbability() == -1.0) {
+            Drawable leftEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye01);
             leftEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             leftEye.draw(canvas);
-        } else if (face.getIsLeftEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
-            Drawable leftEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye01);
+        } else if (face.getIsLeftEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
+            Drawable leftEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_left_eye02);
             leftEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             leftEye.draw(canvas);
         } else {
@@ -200,13 +158,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             leftEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             leftEye.draw(canvas);
         }
-
-        if (face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
-            Drawable rightEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye02);
+        if (face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN || face.getIsRightEyeOpenProbability() == -1.0) {
+            Drawable rightEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye01);
             rightEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             rightEye.draw(canvas);
-        } else if (face.getIsRightEyeOpenProbability() > THRESHOLD_EYES_OPEN) {
-            Drawable rightEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye01);
+        } else if (face.getIsRightEyeOpenProbability() < THRESHOLD_EYES_HALF_OPEN) {
+            Drawable rightEye = ContextCompat.getDrawable(mContext, R.drawable.female_003_right_eye02);
             rightEye.setBounds((int) left, (int) top, (int) right, (int) bottom);
             rightEye.draw(canvas);
         } else {
