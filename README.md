@@ -40,4 +40,6 @@ Motorola Nexus 6 (Android 6.0.1, API 23)
 
 ## Further Works
 
-Landmarks for eyes and mouth can be used to draw them on corresponding positions.
+* Improvement of face tracking performance.
+
+* Landmarks for eyes and mouth can be used to draw them on corresponding positions.
