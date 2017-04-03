@@ -24,7 +24,7 @@ No facial landmarks are required for this demo.
 
 Note 1: A method using the landmarks NOSE_BASE and BOTTOM_MOUTH (landmarks = all) was once considered to calculate the angle of head tilting. However, the performace appears quite similar as using Euler Z value. 
 
-Note 2: The range of head tilting angle is between -45% and 45% according to [Google](https://developers.google.com/vision/face-detection-concepts#face_orientation).
+Note 2: The range of head tilting angle is between -45° and 45° according to [Google](https://developers.google.com/vision/face-detection-concepts#face_orientation).
 
 ### Classifications = all
 
@@ -32,6 +32,12 @@ Classifications are set to ALL in this demo. The probabilities of eyes opening a
 
 Take the left eye for example. When getIsLeftEyeOpenProbability() is larger than a threshold (0.7 in this demo), a fully open left eye is drawn on the canvas; when it goes smaller than another threshold (0.4), a closed eye is drawn; when the value lies between these two thresholds, a half open eye will be presented.
 
+Note: Another thinking for drawing animation is to detect an eye "blinked" for once and draw continuous frames right after. The classification method became ambiguous since the blink action is not real-time. Therefore it is not used in this demo.
+
 ## Test Device
 
 Motorola Nexus 6 (Android 6.0.1, API 23)
+
+## Further Works
+
+Landmarks for eyes and mouth can be used to draw them on corresponding positions.
